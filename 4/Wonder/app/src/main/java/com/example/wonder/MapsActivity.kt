@@ -41,10 +41,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        // Add a marker in NTU and move the camera
+        val latitude = 1.347362
+        val longitude = 103.680785
+        val zoomLevel = 15f
+
+
+        val ntu = LatLng(latitude, longitude)
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ntu, zoomLevel))
+        map.addMarker(MarkerOptions().position(ntu).title("Marker in NTU"))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
