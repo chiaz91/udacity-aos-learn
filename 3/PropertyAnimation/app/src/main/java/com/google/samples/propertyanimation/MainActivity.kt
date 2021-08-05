@@ -74,20 +74,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun rotater() {
+        // Rotate the view for a second around its center once
         val animator = ObjectAnimator.ofFloat(star, View.ROTATION, -360f, 0f)
         animator.duration = 1000
-        animator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationStart(animation: Animator?) {
-                rotateButton.isEnabled = false
-            }
-            override fun onAnimationEnd(animation: Animator?) {
-                rotateButton.isEnabled = true
-            }
-        })
+        animator.disableViewDuringAnimation(rotateButton)
         animator.start()
     }
 
     private fun translater() {
+        // Translate the view 200 pixels to the right and back
+        val animator = ObjectAnimator.ofFloat(star, View.TRANSLATION_X, 200f)
+        animator.repeatCount = 1
+        animator.repeatMode = ObjectAnimator.REVERSE
+        animator.disableViewDuringAnimation(translateButton)
+        animator.start()
     }
 
     private fun scaler() {
@@ -102,4 +102,17 @@ class MainActivity : AppCompatActivity() {
     private fun shower() {
     }
 
+    private fun ObjectAnimator.disableViewDuringAnimation(view: View) {
+        // This extension method listens for start/end events on an animation and disables
+        // the given view for the entirety of that animation.
+        addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator?) {
+                view.isEnabled = false
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                view.isEnabled = true
+            }
+        })
+    }
 }
