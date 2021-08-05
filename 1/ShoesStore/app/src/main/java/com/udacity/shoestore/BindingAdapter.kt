@@ -14,8 +14,8 @@ fun bindShoesList(container: LinearLayout, data: List<Shoe>?) {
     val inflater = container.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     container.removeAllViews()
     data?.forEach{ shoe ->
-        val itemBinding: RowShoeBinding = DataBindingUtil.inflate(
-            inflater, R.layout.row_shoe, container, false)
+        val itemBinding = DataBindingUtil.inflate(
+            inflater, R.layout.row_shoe, container, false) as RowShoeBinding
         itemBinding.curShoe = shoe
         container.addView(itemBinding.root)
     }

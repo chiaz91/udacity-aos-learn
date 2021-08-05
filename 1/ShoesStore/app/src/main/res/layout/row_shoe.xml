@@ -21,7 +21,7 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
+            android:textSize="@dimen/text_size_large"
             android:text="@{curShoe.name}"
             tools:text="Shoe Name" />
 
@@ -29,7 +29,7 @@
             android:id="@+id/size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="@dimen/text_size_normal"
             android:text="@{Double.toString(curShoe.size)}"
             tools:text="size: 6.0" />
 
@@ -37,7 +37,7 @@
             android:id="@+id/company"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="@dimen/text_size_normal"
             android:text="@{curShoe.company}"
             tools:text="company: nike" />
 
@@ -45,7 +45,7 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="@dimen/text_size_normal"
             android:text="@{curShoe.description}"
             tools:text="some desc" />
 

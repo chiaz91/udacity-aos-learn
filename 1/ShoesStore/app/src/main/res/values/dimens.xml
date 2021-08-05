@@ -4,4 +4,6 @@
     <dimen name="margin_half">8dp</dimen>
     <dimen name="padding_default">16dp</dimen>
     <dimen name="padding_half">8dp</dimen>
+    <dimen name="text_size_large">25sp</dimen>
+    <dimen name="text_size_normal">15sp</dimen>
 </resources>
