@@ -32,9 +32,9 @@ class TitleFragment: Fragment() {
         */
 
         // [3] using Navigation to create OnClickListener
-        binding.playButton.setOnClickListener(
-            Navigation.createNavigateOnClickListener(R.id.action_titleFragment_to_gameFragment)
-        )
+        binding.playButton.setOnClickListener { view: View ->
+            view.findNavController().navigate(TitleFragmentDirections.actionTitleFragmentToGameFragment())
+        }
         return binding.root
     }
 
