@@ -1,9 +1,6 @@
 package com.udacity.project4.locationreminders.savereminder.selectreminderlocation
 
-
-import android.Manifest
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -17,20 +14,24 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.udacity.project4.R
-import com.udacity.project4.REQ_PERMISSION_FOREGROUND_BACKGROUND_LOCATION
 import com.udacity.project4.REQ_PERMISSION_FOREGROUND_LOCATION
-import com.udacity.project4.base.BaseFragment
+import com.udacity.project4.base.BasePermissionFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
-import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
-import com.vmadalin.easypermissions.EasyPermissions
-import com.vmadalin.easypermissions.dialogs.SettingsDialog
+import com.udacity.project4.utils.*
 import org.koin.android.ext.android.inject
 import java.util.*
+import android.content.Intent
+
+import android.location.LocationManager
+
+import android.content.IntentFilter
+import com.google.android.material.snackbar.Snackbar
+import com.udacity.project4.locationreminders.savereminder.LocationStateChangedReceiver
 
 
-class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissions.PermissionCallbacks {
+class SelectLocationFragment : BasePermissionFragment(), OnMapReadyCallback {
     private val TAG: String = "cy.frag.select_location"
     private val DEFAULT_ZOOM = 15f;
     private val runningQOrLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
@@ -40,8 +41,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
     private lateinit var binding: FragmentSelectLocationBinding
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var map: GoogleMap
-    private var selectedPOI: PointOfInterest? = null
     private var latLngGoogleplex = LatLng(37.42206, -122.08409)
+    private val locationStateReceiver = LocationStateChangedReceiver { isEnabled ->
+        Log.i(TAG, "location state is $isEnabled")
+        // receive location changes, should update the ui?
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -67,8 +71,24 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
 
     override fun onStart() {
         super.onStart()
-        requestLocationPermissions()
+
+        if (hasForegroundLocationPermission()){
+            locateUser()
+        }
     }
+
+    override fun onResume() {
+        super.onResume()
+        val filter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        filter.addAction(Intent.ACTION_PROVIDER_CHANGED)
+        requireActivity().registerReceiver(locationStateReceiver, filter)
+    }
+
+    override fun onPause() {
+        requireActivity().unregisterReceiver(locationStateReceiver)
+        super.onPause()
+    }
+
 
     override fun onMapReady(googleMap: GoogleMap) {
         Log.i(TAG, "Google map is ready!")
@@ -78,14 +98,28 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
         map.uiSettings.isZoomControlsEnabled = true
         setMapStyle(map)
         setPoiClick(map)
+        setMapLongClick(map)
+        setMarkerClick(map)
 
         // zoom to the user location after taking his permission
-        if (hasLocationPermissions()){
+        if (hasForegroundLocationPermission()){
             locateUser()
         } else {
-            requestLocationPermissions()
+            requestForegroundLocationPermissions()
         }
         _viewModel.showToast.value = getString(R.string.select_poi)
+        _viewModel.selectedPOI.observe(viewLifecycleOwner, androidx.lifecycle.Observer { poi ->
+            try{
+                val camUpdate = CameraUpdateFactory.newLatLngZoom(poi.latLng, DEFAULT_ZOOM);
+                map.animateCamera(camUpdate)
+            } catch (e:Exception){
+                e.printStackTrace()
+            }
+        })
+    }
+
+    private fun createPoi(latLng: LatLng): PointOfInterest{
+        return PointOfInterest(latLng, "id", latLng.format(3))
     }
 
     // generate the style with wizard @ https://mapstyle.withgoogle.com/
@@ -130,30 +164,47 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
     // point of interest
     private fun setPoiClick(map: GoogleMap) {
         map.setOnPoiClickListener { poi ->
+            Log.i(TAG, "onPoiClicked: ${poi.name}, ${poi.latLng}")
             map.clear()
             addAndShowMarker(map, poi.name, poi.latLng)
-            selectedPOI = poi
+            _viewModel.selectedPOI.value = poi
         }
     }
 
-//    private fun setMapLongClick(map:GoogleMap) {
-//        map.setOnMapLongClickListener { latLng ->
-//            map.clear()
-//            addAndShowMarker(map, getString(R.string.dropped_pin), latLng)
-//        }
-//    }
+    private fun setMapLongClick(map:GoogleMap) {
+        map.setOnMapLongClickListener { latLng ->
+            Log.i(TAG, "OnMapLongClicked $latLng")
+            map.clear()
+            addAndShowMarker(map, getString(R.string.dropped_pin), latLng)
+
+            _viewModel.selectedPOI.value = createPoi(latLng)
+        }
+    }
+
+    private fun setMarkerClick(map:GoogleMap){
+        map.setOnMarkerClickListener { marker ->
+            Log.i(TAG, "onMarkerClicked ${marker.title}, ${marker.snippet}, ${marker.position}")
+            false
+        }
+    }
 
     @SuppressLint("MissingPermission")
     private fun locateUser(){
-        // enable locate user on ui
-        map.isMyLocationEnabled = true
+        try {
+            // enable locate user on ui
+            map.isMyLocationEnabled = true
 
-        // retrieve and move camera to device's location
-        getDeviceLocation { latlng ->
-            val camUpdate = CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM);
-            map.animateCamera(camUpdate)
-            map.addMarker(MarkerOptions().position(latlng).title("Current Location"))
+            // retrieve and move camera to device's location
+            getDeviceLocation { latLng ->
+                Log.i(TAG, "deviceLocation: ${latLng.format()}")
+                map.clear()
+                map.addMarker(MarkerOptions().position(latLng).title("Current Location"))
+                _viewModel.selectedPOI.value = createPoi(latLng)
+            }
+        } catch (e: Exception){
+            e.printStackTrace()
         }
+
     }
 
     private fun getDeviceLocation(callback : (LatLng) -> Unit) {
@@ -163,6 +214,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
                 // default location to Googleplex
                 var latLng = latLngGoogleplex
                 if (task.isSuccessful ) {
+                    // has permission and location is turned on
                     try{
                         // return the current location of the device.
                         latLng = LatLng(task.result!!.latitude, task.result!!.longitude)
@@ -182,65 +234,19 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
         // When the user confirms on the selected location,
         // send back the selected location details to the view model
         // and navigate back to the previous fragment to save the reminder and add the geofence
-//        selectedPOI?.let {
-//            _viewModel.reminderSelectedLocationStr.value = it.name
-//            _viewModel.selectedPOI.value = it
-//            _viewModel.latitude.value = it.latLng.latitude
-//            _viewModel.longitude.value = it.latLng.longitude
-//            _viewModel.navigationCommand.value = NavigationCommand.Back
-//        }
-        if (selectedPOI!=null){
-            _viewModel.reminderSelectedLocationStr.value = selectedPOI!!.name
-            _viewModel.selectedPOI.value = selectedPOI!!
-            _viewModel.latitude.value = selectedPOI!!.latLng.latitude
-            _viewModel.longitude.value = selectedPOI!!.latLng.longitude
+        _viewModel.selectedPOI.value?.let {
+            _viewModel.reminderSelectedLocationStr.value = it.name
+            _viewModel.latitude.value = it.latLng.latitude
+            _viewModel.longitude.value = it.latLng.longitude
             _viewModel.navigationCommand.value = NavigationCommand.Back
-        } else { // for testing using the default location
+        } ?: run{
+            // for testing, uses default location
+            _viewModel.selectedPOI.value = createPoi(latLngGoogleplex)
             _viewModel.reminderSelectedLocationStr.value = "Googleplex"
-            _viewModel.selectedPOI.value = null
             _viewModel.latitude.value = latLngGoogleplex.latitude
             _viewModel.longitude.value = latLngGoogleplex.longitude
             _viewModel.navigationCommand.value = NavigationCommand.Back
         }
-    }
-
-
-
-    // Permission related
-    @TargetApi(29)
-    private fun hasLocationPermissions(): Boolean{
-        var permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        if (runningQOrLater){
-            permissions += Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        }
-        return EasyPermissions.hasPermissions(requireContext(), *permissions)
-    }
-
-    @TargetApi(29)
-    private fun requestLocationPermissions(){
-        if (hasLocationPermissions())
-            return
-        var permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        val requestCode = when {
-            runningQOrLater -> {
-                permissions += Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                REQ_PERMISSION_FOREGROUND_BACKGROUND_LOCATION
-            }
-            else -> REQ_PERMISSION_FOREGROUND_LOCATION
-        }
-        EasyPermissions.requestPermissions(
-            this,
-            getString(R.string.permission_denied_explanation),
-            requestCode,
-            *permissions
-        )
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        // let EasyPermissions handles the request result.
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
@@ -248,11 +254,20 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)){
-            SettingsDialog.Builder(requireActivity()).build().show()
-        } else {
-            requestLocationPermissions()
+        when (requestCode){
+            REQ_PERMISSION_FOREGROUND_LOCATION -> {
+//                if (shouldShowRequestPermissionsRationale(perms)){
+//                    requireContext().showPermissionDeniedDialog(getString(R.string.permission_denied_explanation))
+//                }
+//                requireContext().showPermissionDeniedDialog(getString(R.string.permission_denied_explanation))
+                Snackbar.make(requireView(), R.string.permission_denied_explanation, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.settings) {
+                        requireContext().toSettingPage()
+                    }.show()
+            }
+
         }
+
     }
 
 
