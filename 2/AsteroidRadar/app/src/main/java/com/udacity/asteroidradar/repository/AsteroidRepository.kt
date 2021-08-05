@@ -4,43 +4,36 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.Constants.DEFAULT_END_DATE_DAYS
 import com.udacity.asteroidradar.PictureOfDay
+import com.udacity.asteroidradar.addDays
 import com.udacity.asteroidradar.api.AsteroidApi
 import com.udacity.asteroidradar.api.asDatabaseModel
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.database.AsteroidDatabase
 import com.udacity.asteroidradar.database.asDomainModel
+import com.udacity.asteroidradar.format
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import retrofit2.HttpException
-import java.text.SimpleDateFormat
 import java.util.*
 
 class AsteroidRepository(private val database: AsteroidDatabase) {
-    private val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
-
     val asteroidList: LiveData<List<Asteroid>> = Transformations.map(database.asteroid.getListAsteroid()) {
         it?.asDomainModel()
     }
 
     val pictureOfTheDayData: LiveData<PictureOfDay> = Transformations.map(database.asteroid.getPictureOfTheDay()) {
-        it?.let {
-            it.asDomainModel()
-        }
+        it?.asDomainModel()
     }
 
     suspend fun refreshAsteroid() {
         withContext(Dispatchers.IO) {
             try {
                 // prepare request parameters
-                val calendar = Calendar.getInstance()
-                val currentTime = calendar.time
-                val startDate = dateFormat.format(currentTime)
-                calendar.add(Calendar.DAY_OF_YEAR, DEFAULT_END_DATE_DAYS)
-                val endDate = dateFormat.format(calendar.time)
+                val startDate = Date().format()
+                val endDate = Date().addDays(DEFAULT_END_DATE_DAYS).format()
 
                 // send request and parse data
                 val asteroidList = AsteroidApi.retrofitService.getAsteroidListAsync(startDate, endDate).await()
