@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/hazardous_information_not_available"
             app:asteroidStatusImage="@{asteroid.potentiallyHazardous}"
             app:asteroidStatusImageDesc="@{asteroid.potentiallyHazardous}"
             app:layout_constraintEnd_toEndOf="parent"

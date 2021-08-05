@@ -22,4 +22,5 @@
     <string name="may_hazardous">potential hazardous</string>
     <string name="not_hazardous">not hazardous</string>
     <string name="absolute_magnitude_help">Unit definition info</string>
+    <string name="hazardous_information_not_available">Hazardous information not available</string>
 </resources>
