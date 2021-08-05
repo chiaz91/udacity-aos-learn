@@ -1,16 +1,26 @@
 package com.udacity.project4
 
 import android.app.Application
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
+import androidx.test.espresso.Espresso.closeSoftKeyboard
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.udacity.project4.locationreminders.RemindersActivity
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.local.LocalDB
 import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
 import com.udacity.project4.locationreminders.reminderslist.RemindersListViewModel
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -66,6 +76,32 @@ class RemindersActivityTest :
     }
 
 
-//    TODO: add End to End testing to the app
+    // add End to End testing to the app
+    @Test
+    fun addReminder() = runBlockingTest{
+        // launch reminders list activity
+        val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        onView(withId(R.id.addReminderFAB)).perform(click())
+
+        // do add reminder
+        onView(withId(R.id.reminderTitle)).perform(typeText("Test"))
+        onView(withId(R.id.reminderDescription)).perform(typeText("Description"))
+        closeSoftKeyboard()
+        onView(withId(R.id.selectLocation)).perform(click())
+
+
+        // google map select location
+        // not sure how to simulate user interaction to select POI
+        onView(withId(R.id.map_frag)).check(matches(isDisplayed()))
+        onView(withId(R.id.save_button)).perform(click())
+
+        // save reminder and ensure it's displayed
+        onView(withId(R.id.saveReminder)).perform(click())
+        onView(withText("Test")).check(matches(isDisplayed()))
+        onView(withText("Description")).check(matches(isDisplayed()))
+
+        activityScenario.close()
+    }
+
 
 }

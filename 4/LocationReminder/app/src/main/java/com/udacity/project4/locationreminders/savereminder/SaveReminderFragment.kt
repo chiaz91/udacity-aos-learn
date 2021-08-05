@@ -81,7 +81,7 @@ class SaveReminderFragment : BaseFragment(), EasyPermissions.PermissionCallbacks
             try{
                 // TODO: additional checks on permission and device location?
                 geofencingClient.addGeofenceForReminder(reminder)
-                _viewModel.validateAndSaveReminder(reminder)
+                _viewModel.saveReminder(reminder)
             } catch (e:Exception ){
                 e.printStackTrace()
             }

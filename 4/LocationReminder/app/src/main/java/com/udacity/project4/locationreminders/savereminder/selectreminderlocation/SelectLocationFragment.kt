@@ -41,6 +41,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var map: GoogleMap
     private var selectedPOI: PointOfInterest? = null
+    private var latLngGoogleplex = LatLng(37.42206, -122.08409)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -159,7 +160,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
             val locationTask = fusedLocationProviderClient.lastLocation
             locationTask.addOnCompleteListener(requireActivity()) { task ->
                 // default location to Googleplex
-                var latLng = LatLng(37.42206, -122.08409)
+                var latLng = latLngGoogleplex
                 if (task.isSuccessful ) {
                     try{
                         // return the current location of the device.
@@ -180,11 +181,24 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
         // When the user confirms on the selected location,
         // send back the selected location details to the view model
         // and navigate back to the previous fragment to save the reminder and add the geofence
-        selectedPOI?.let {
-            _viewModel.reminderSelectedLocationStr.value = it.name
-            _viewModel.selectedPOI.value = it
-            _viewModel.latitude.value = it.latLng.latitude
-            _viewModel.longitude.value = it.latLng.longitude
+//        selectedPOI?.let {
+//            _viewModel.reminderSelectedLocationStr.value = it.name
+//            _viewModel.selectedPOI.value = it
+//            _viewModel.latitude.value = it.latLng.latitude
+//            _viewModel.longitude.value = it.latLng.longitude
+//            _viewModel.navigationCommand.value = NavigationCommand.Back
+//        }
+        if (selectedPOI!=null){
+            _viewModel.reminderSelectedLocationStr.value = selectedPOI!!.name
+            _viewModel.selectedPOI.value = selectedPOI!!
+            _viewModel.latitude.value = selectedPOI!!.latLng.latitude
+            _viewModel.longitude.value = selectedPOI!!.latLng.longitude
+            _viewModel.navigationCommand.value = NavigationCommand.Back
+        } else { // for testing using the default location
+            _viewModel.reminderSelectedLocationStr.value = "Googleplex"
+            _viewModel.selectedPOI.value = null
+            _viewModel.latitude.value = latLngGoogleplex.latitude
+            _viewModel.longitude.value = latLngGoogleplex.longitude
             _viewModel.navigationCommand.value = NavigationCommand.Back
         }
     }
