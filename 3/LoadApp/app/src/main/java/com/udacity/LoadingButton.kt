@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AccelerateInterpolator
 import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
@@ -16,6 +17,12 @@ private const val TEXT_SIZE_DEFAULT = 30f
 class LoadingButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
+    var loading = false
+        set(value) {
+            field = value
+            buttonState = if (value) ButtonState.Loading else ButtonState.Default
+        }
+
     private var text: String
     private var progress = 0f
     private val valueAnimator = ValueAnimator()
@@ -74,14 +81,9 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-    fun setLoading(isLoading: Boolean){
-        valueAnimator.clear()
-        buttonState = if (isLoading) ButtonState.Loading else ButtonState.Default
-        isEnabled = !isLoading
-    }
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!isEnabled) return false
+        if (buttonState == ButtonState.Loading) return super.onTouchEvent(event)
         when (event.action){
             MotionEvent.ACTION_DOWN -> {
                 lastTouch.apply {
@@ -210,7 +212,7 @@ class LoadingButton @JvmOverloads constructor(
             progress = animatedValue as Float
             invalidate()
         }
-        interpolator = AccelerateDecelerateInterpolator()
+        interpolator = AccelerateInterpolator()
         repeatCount = 0
         duration = 500
         start()

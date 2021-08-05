@@ -1,30 +1,33 @@
 package com.udacity
 
-import android.app.AlertDialog
 import android.app.DownloadManager
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.database.Cursor
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 
+const val NOTIFICATION_ID = 1001
 class MainActivity : AppCompatActivity() {
-
     private var downloadID: Long = 0
 
-    private lateinit var notificationManager: NotificationManager
+    private val notificationManager: NotificationManager by lazy {
+        getSystemService(NotificationManager::class.java) as NotificationManager
+    }
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
 
@@ -36,78 +39,129 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         custom_button.setOnClickListener {
-//            download()
-            simulateLoading()
+            when(custom_button.loading){
+                false -> download()
+                true  -> queryDownloadStatus(downloadID) // for debug
+            }
         }
+        // maybe bind with Binding adapter better?
+        rb_glide.tag = URL1
+        rb_loadapp.tag = URL2
+        rb_loadapp.tag = URL3
     }
 
-    fun showDialog(){
-        AlertDialog.Builder(this).let{
-            it.setTitle("download succ")
-            it.setMessage("view downloads")
-            it.setPositiveButton("view") { _, _ ->
-                val viewDownloads = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)
-                startActivity(viewDownloads)
-            }
-        }.show()
+    override fun onRestart() {
+        super.onRestart()
+        custom_button.loading = false
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(receiver)
+        super.onDestroy()
     }
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-            if (downloadID == id) {
-                val query = DownloadManager.Query()
-                query.setFilterById(intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0));
-                val manager = context!!.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-                val cursor: Cursor = manager.query(query)
-                if (cursor.moveToFirst()) {
-                    val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                    val reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON))
-                    Log.i("load.rec", "status $status, reason $reason")
-                    Log.i("load.rec", "status ${getStatusString(status)}, reason ${getReasonString(reason)}")
-                    if (status == DownloadManager.STATUS_SUCCESSFUL){
-                        showDialog()
-                    }
-                } else{
-                    Log.i("load.rec", "Failed to moveToFirst")
+            intent?.extras?.log()
+            val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) ?:return
+
+            if (id == downloadID){
+                // show notification for complete
+                // intent only tells task ended, but it may not be success
+                // can be failed, paused or cancelled
+                queryDownloadStatus(downloadID)
+                notificationManager.run{
+                    createChannel(CHANNEL_ID, getString(R.string.notification_name_downloads))
+                    notifyDownloadComplete()
                 }
-            } else {
-                Log.i("load.rec", "unrelated downloadId $id")
+                custom_button.loading = false
             }
+
         }
     }
 
-
-
-
-
     private fun download() {
-        val request = DownloadManager.Request(Uri.parse(URL))
-//                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-                .setTitle(getString(R.string.app_name))
+        val radioOption = findViewById<RadioButton>(rg_downloads.checkedRadioButtonId)
+        if (radioOption == null) {
+            toast(getString(R.string.guide_empty_url))
+            return
+        }
+        val request = DownloadManager.Request(Uri.parse((radioOption.tag as String)))
+                .setTitle(radioOption.text)
                 .setDescription(getString(R.string.app_description))
                 .setRequiresCharging(false)
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(true)
+//                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
 //                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID = downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+        custom_button.loading=true
     }
 
+//    private fun cancelDownload(){
+//        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+//        downloadManager.remove(downloadID)
+//    }
+
     companion object {
-        private const val URL =
-            "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
+        private const val URL1 = "https://github.com/bumptech/glide/archive/master.zip"
+        private const val URL2 = "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
+        private const val URL3 = "https://github.com/square/retrofit/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
     }
 
-    // test animation
-    fun simulateLoading(){
-        custom_button.setLoading(true)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            custom_button.setLoading(false)
-        }, 3000)
+    // notification
+    fun NotificationManager.createChannel(id:String, name:String){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
+                enableLights(true)
+                enableVibration(true)
+                description = "General channel"
+                lightColor = Color.GREEN
+            }
+            createNotificationChannel(notificationChannel)
+        }
     }
 
+    fun NotificationManager.notifyDownloadComplete(){
+        val contentIntent = Intent(applicationContext, DetailActivity::class.java)
+            .putExtra("download_id", downloadID)
+        pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NOTIFICATION_ID,
+            contentIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID).apply {
+            priority = NotificationCompat.PRIORITY_HIGH
+            setSmallIcon(R.drawable.ic_cloud_download)
+            setContentTitle(applicationContext.getString(R.string.notification_title))
+            setContentText(applicationContext.getString(R.string.notification_description))
+            setContentIntent(pendingIntent)
+            setAutoCancel(true)
+            addAction(
+                R.drawable.ic_folder,
+                applicationContext.getString(R.string.notification_button),
+                pendingIntent
+            )
+        }
+        notify(NOTIFICATION_ID, builder.build())
+    }
+
+
+    // option menu
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_view_downloads -> toViewDownload()
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

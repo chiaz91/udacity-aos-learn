@@ -1,6 +1,76 @@
 package com.udacity;
 
+import android.app.Activity
 import android.app.DownloadManager
+import android.content.Context
+import android.content.Intent
+import android.database.Cursor
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
+
+fun Activity.toViewDownload(){
+    val viewDownloads = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)
+    startActivity(viewDownloads)
+}
+
+fun Activity.toast(message: String): Toast {
+    val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
+    toast.show()
+    return toast
+}
+
+fun Context.queryDownloadStatus(id: Long): FileStatus?{
+    try{
+        val query = DownloadManager.Query()
+        query.setFilterById(id)
+        val manager = getSystemService(AppCompatActivity.DOWNLOAD_SERVICE) as DownloadManager
+        manager.query(query).run {
+            if (moveToFirst()){
+                log()
+                val title = getString(getColumnIndex(DownloadManager.COLUMN_TITLE))
+                val status = getInt(getColumnIndex(DownloadManager.COLUMN_STATUS))
+                val reason = getInt(getColumnIndex(DownloadManager.COLUMN_REASON))
+                return FileStatus(title, status, reason)
+            }
+        }
+    } catch (e: Exception){
+        e.printStackTrace()
+    }
+    return null
+}
+
+// debug
+fun LoadingButton.simulateLoading(){
+    loading = true
+
+    Handler(Looper.getMainLooper()).postDelayed({
+        loading = false
+    }, 3000)
+}
+
+fun Bundle.log() {
+    Log.i("load.bundle", "{")
+    keySet().forEach{key ->
+        Log.i("load.bundle",  " $key: ${this[key].toString()}" )
+    }
+    Log.i("load.bundle", "}")
+}
+
+fun Cursor.log(){
+    Log.i("load.cursor", "{")
+    columnNames.forEach {col->
+        try{
+            val idx = getColumnIndex(col)
+            Log.i("load.cursor", " $idx $col: ${getString(idx)}")
+        } catch (e: Exception){}
+    }
+    Log.i("load.cursor", "}")
+}
 
 // dirty methods :P
 fun getStatusString(status: Int): String{
@@ -13,6 +83,7 @@ fun getStatusString(status: Int): String{
         else -> "Unknown status"
     }
 }
+
 fun getReasonString(reason: Int): String{
     return when(reason){
         // pauses
