@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.udacity.shoestore.models.ShoeViewModel" />
 
     </data>
 
@@ -24,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                app:listShoes="@{viewModel.shoes}"
                 tools:context=".fragments.ShoeListFragment">
 
             </LinearLayout>
