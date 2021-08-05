@@ -1,24 +1,36 @@
 package com.example.android.architecture.blueprints.todoapp.statistics
 
 import com.example.android.architecture.blueprints.todoapp.data.Task
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.`is`
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class StatisticsUtilsTest {
+    /* Tips
+       Naming Convention: subjectUnderTest_actionOrInput_resultState
+       - subjectUnderTest: what we testing eg method name
+
+       Test case structure: Given/When/Then (similar to Arrange,Act,Assert(AAA))
+
+       using assertion framework like hamcrest to make it more readable like human sentence
+    */
+
     // if there's no completed task, and one active tasks
     // then there are 100% active tasks and 0% completed tasks
     @Test
     fun getActiveAndCompletedStats_noCompleted_returnsHundredZero() {
-        // Create an active tasks (the false makes this active)
+        // GIVEN a list of task with a single, active task
         val tasks = listOf<Task>(
             Task("title", "desc", isCompleted = false)
         )
-        // Call our function
+        // WHEN you call getActiveAndCompletedStats
         val result = getActiveAndCompletedStats(tasks)
 
-        // Check the result
-        assertEquals(100f, result.activeTasksPercent)
-        assertEquals(  0f, result.completedTasksPercent)
+        // THEN there are 100% active tasks and 0% completed tasks
+        // convert to hamcrest
+        assertThat(result.activeTasksPercent, `is`(100f))
+        assertThat(result.completedTasksPercent, `is`(0f))
     }
 
     // if there's 2 completed tasks, 3 one active tasks
