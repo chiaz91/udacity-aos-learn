@@ -6,8 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
+        <!-- Default text color -->
         <item name="android:textViewStyle">@style/AppText</item>
+        <!-- Option menu background -->
+        <item name="android:itemBackground">@color/app_background</item>
     </style>
 
     <style name="AppText" parent="@android:style/TextAppearance.Medium">
@@ -21,5 +23,6 @@
 
     <style name="AppText.ListSubtitle" >
         <item name="android:textSize">@dimen/font_small</item>
+        <item name="android:textColor">@color/text_grey</item>
     </style>
 </resources>
