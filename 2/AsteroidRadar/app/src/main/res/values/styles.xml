@@ -6,6 +6,20 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:textViewStyle">@style/AppText</item>
     </style>
 
+    <style name="AppText" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/default_text_color</item>
+    </style>
+
+    <style name="AppText.ListTitle">
+        <item name="android:textSize">@dimen/font_normal</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AppText.ListSubtitle" >
+        <item name="android:textSize">@dimen/font_small</item>
+    </style>
 </resources>

@@ -6,6 +6,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.udacity.asteroidradar.AsteroidAdapter
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
@@ -23,23 +24,18 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        val adapter = AsteroidAdapter()
+        binding.asteroidRecycler.adapter = adapter
+
         setHasOptionsMenu(true)
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         // observe database changes
-        viewModel.asteroidList.observe(viewLifecycleOwner, Observer {
-            it.forEach{ asteroid ->
-                Log.i("nasa.main.asteroid", it.toString())
-            }
+        viewModel.asteroidList.observe(viewLifecycleOwner, Observer { asteroids ->
+            adapter.submitList(asteroids)
         })
         viewModel.pictureOfDay.observe(viewLifecycleOwner, Observer {
             Log.i("nasa.main.pic", it.toString())
         })
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
