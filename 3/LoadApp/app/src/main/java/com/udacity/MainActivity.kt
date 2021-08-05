@@ -47,10 +47,10 @@ class MainActivity : AppCompatActivity() {
                 true  -> queryDownloadStatus(downloadID) // for debug
             }
         }
-        // maybe bind with Binding adapter better?
-        rb_glide.tag = URL1
-        rb_loadapp.tag = URL2
-        rb_loadapp.tag = URL3
+//        // maybe bind with Binding adapter better?
+//        rb_glide.tag = URL1
+//        rb_loadapp.tag = URL2
+//        rb_loadapp.tag = URL3
     }
 
     override fun onRestart() {
@@ -89,7 +89,13 @@ class MainActivity : AppCompatActivity() {
             toast(getString(R.string.guide_empty_url))
             return
         }
-        val request = DownloadManager.Request(Uri.parse((radioOption.tag as String)))
+
+        val url = when(radioOption){
+            rb_glide -> URL1
+            rb_retrofit -> URL3
+            else -> URL2
+        }
+        val request = DownloadManager.Request(Uri.parse(url))
                 .setTitle(radioOption.text)
                 .setDescription(getString(R.string.app_description))
                 .setRequiresCharging(false)
