@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
@@ -35,8 +36,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 asteroidRepository.refreshAsteroid()
                 asteroidRepository.refreshPictureOfDay()
                 _status.value = ApiStatus.DONE
+                Log.i("nasa.main.vm", "loading.succ")
             }catch (e: Exception){
                 _status.value = ApiStatus.ERROR
+                Log.i("nasa.main.vm", "loading.err ${e.message}")
+                // TODO: set up an event to notify and present error to user?
             }
         }
     }

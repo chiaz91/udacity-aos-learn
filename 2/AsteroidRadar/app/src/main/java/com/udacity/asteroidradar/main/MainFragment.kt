@@ -68,6 +68,7 @@ class MainFragment : Fragment() {
             .placeholder(R.drawable.loading_img)
             .error(R.drawable.ic_broken_image)
             .into(binding.activityMainImageOfTheDay)
+        binding.activityMainImageOfTheDay.contentDescription = pictureOfDay.title
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

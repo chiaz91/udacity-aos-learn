@@ -16,7 +16,6 @@ class RefreshDataWork(appContext: Context, params: WorkerParameters): CoroutineW
         val asteroidRepository = AsteroidRepository(database)
 
         return try {
-            // TODO: remove data before today?
             asteroidRepository.refreshAsteroid()
             asteroidRepository.refreshPictureOfDay()
             Result.success()
