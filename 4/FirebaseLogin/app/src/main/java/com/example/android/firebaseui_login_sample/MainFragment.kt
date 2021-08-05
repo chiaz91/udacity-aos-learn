@@ -98,18 +98,6 @@ class MainFragment : Fragment() {
     private fun observeAuthenticationState() {
         val factToDisplay = viewModel.getFactToDisplay(requireContext())
 
-        // TODO Use the authenticationState variable from LoginViewModel to update the UI
-        //  accordingly.
-        //
-        //  TODO If there is a logged-in user, authButton should display Logout. If the
-        //   user is logged in, you can customize the welcome message by utilizing
-        //   getFactWithPersonalition(). I
-
-        // TODO If there is no logged in user, authButton should display Login and launch the sign
-        //  in screen when clicked. There should also be no personalization of the message
-        //  displayed.
-
-
         //  Use the authenticationState variable from LoginViewModel to update the UI
         //  accordingly.
         viewModel.authenticationState.observe(viewLifecycleOwner, Observer { authenticationState ->
@@ -119,7 +107,6 @@ class MainFragment : Fragment() {
                     // 1. authButton should display Logout.
                     binding.authButton.text = getString(R.string.logout_button_text)
                     binding.authButton.setOnClickListener {
-                        // TODO implement logging out user in next step
                         AuthUI.getInstance().signOut(requireContext())
                     }
 
