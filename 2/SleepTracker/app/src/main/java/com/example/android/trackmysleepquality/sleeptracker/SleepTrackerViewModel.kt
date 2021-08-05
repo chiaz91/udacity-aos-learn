@@ -54,6 +54,10 @@ class SleepTrackerViewModel(
                 it?.isNotEmpty()
         }
 
+        private var _showSnackbarEvent= MutableLiveData<Boolean>()
+        val showSnackbarEvent: LiveData<Boolean>
+                get() = _showSnackbarEvent
+
 
         init{
                 initializeTonight()
@@ -103,6 +107,7 @@ class SleepTrackerViewModel(
                 viewModelScope.launch {
                         clear()
                         tonight.value = null
+                        _showSnackbarEvent.value = true
                 }
         }
 
@@ -113,6 +118,10 @@ class SleepTrackerViewModel(
         // event
         fun doneNavigating(){
                 _navToSleepQuality.value = null
+        }
+
+        fun doneShowingSnackback(){
+                _showSnackbarEvent.value = false
         }
 
 
