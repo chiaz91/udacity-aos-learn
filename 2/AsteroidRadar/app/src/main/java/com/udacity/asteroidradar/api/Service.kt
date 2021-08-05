@@ -3,6 +3,7 @@ package com.udacity.asteroidradar.api
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.udacity.asteroidradar.BuildConfig
 import com.udacity.asteroidradar.Constants
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
@@ -14,7 +15,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-const val NASA_KEY = "DEMO_KEY"
 interface AsteroidService {
     @GET("/neo/rest/v1/feed")
     fun getAsteroidListAsync(
@@ -59,7 +59,7 @@ object AsteroidApi {
         val originalHttpUrl = originalRequest.url()
 
         val newHttpUrl = originalHttpUrl.newBuilder()
-            .addQueryParameter("api_key", NASA_KEY)
+            .addQueryParameter("api_key", BuildConfig.NASA_API_KEY)
             .build()
 
         val newRequest = originalRequest.newBuilder()
