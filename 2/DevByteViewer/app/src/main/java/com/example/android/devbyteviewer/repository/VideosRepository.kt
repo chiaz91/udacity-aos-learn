@@ -26,6 +26,7 @@ import com.example.android.devbyteviewer.network.Network
 import com.example.android.devbyteviewer.network.asDatabaseModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 
 // dependency injection: pass in db as param instead of android context, to prevent potential leak
@@ -49,8 +50,13 @@ class VideosRepository(private val database: VideosDatabase) {
      */
     suspend fun refreshVideos() {
         withContext(Dispatchers.IO) {
-            val playlist = Network.devbytes.getPlaylist().await()
-            database.videoDao.insertAll(*playlist.asDatabaseModel())
+            try {
+                val playlist = Network.devbytes.getPlaylist().await()
+                database.videoDao.insertAll(*playlist.asDatabaseModel())
+            } catch (e: Exception){
+                Timber.i("repo wrong: ${e.message}")
+                e.printStackTrace()
+            }
         }
     }
 }
