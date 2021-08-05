@@ -20,6 +20,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.app.ShareCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -46,19 +47,24 @@ class GameWonFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.winner_menu, menu)
+
+        // check if the activity resolves
+        if (null == getShareIntent().resolveActivity(requireActivity().packageManager)) {
+            // hide the menu item if it doesn't resolve
+            menu.findItem(R.id.share)?.isVisible = false
+        }
     }
 
-    private fun getShareInent(): Intent {
+    private fun getShareIntent(): Intent {
         var args = GameWonFragmentArgs.fromBundle(requireArguments())
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.setType("text/plain")
-            .putExtra(Intent.EXTRA_TEXT,
-                getString(R.string.share_success_text, args.numCorrect, args.numQuestions))
-        return shareIntent
+        return ShareCompat.IntentBuilder.from(requireActivity())
+            .setText(getString(R.string.share_success_text, args.numCorrect, args.numQuestions))
+            .setType("text/plain")
+            .intent
     }
 
     private fun shareSuccess(){
-        startActivity(getShareInent())
+        startActivity(getShareIntent())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
