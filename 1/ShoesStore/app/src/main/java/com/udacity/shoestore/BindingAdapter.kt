@@ -10,7 +10,7 @@ import com.udacity.shoestore.models.Shoe
 
 
 @BindingAdapter("listShoes")
-fun bindRecyclerView(container: LinearLayout, data: List<Shoe>?) {
+fun bindShoesList(container: LinearLayout, data: List<Shoe>?) {
     val inflater = container.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     container.removeAllViews()
     data?.forEach{ shoe ->
