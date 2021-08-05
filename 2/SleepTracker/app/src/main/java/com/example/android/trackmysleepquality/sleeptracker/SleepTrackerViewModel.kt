@@ -19,6 +19,7 @@ package com.example.android.trackmysleepquality.sleeptracker
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
 import kotlinx.coroutines.*
@@ -32,8 +33,6 @@ class SleepTrackerViewModel(
 
         // as ViewModel now provides lifecycle-aware coroutine scope by default
         // custom job is no longer required
-        private var viewModelJob = Job()
-        private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
         private var tonight = MutableLiveData<SleepNight?>()
         private val nights = database.getAllNights()
@@ -43,37 +42,33 @@ class SleepTrackerViewModel(
         }
 
         private fun initializeTonight(){
-                uiScope.launch {
+                viewModelScope.launch {
                         tonight.value = getTonightFromDatabase()
                 }
         }
 
         private suspend fun getTonightFromDatabase(): SleepNight?{
-                return withContext(Dispatchers.IO){
-                        var night = database.getTonight()
-                        if (night?.endTimeMilli != night?.startTimeMilli){
-                                night = null
-                        }
-                        night
+                var night = database.getTonight()
+                if (night?.endTimeMilli != night?.startTimeMilli){
+                        night = null
                 }
+                return night
         }
 
         fun onStartTracking(){
-             uiScope.launch {
+             viewModelScope.launch {
                      val newNight = SleepNight()
-                     insert(newNight) 
+                     insert(newNight)
                      tonight.value = getTonightFromDatabase()
              }
         }
 
         private suspend fun insert(night: SleepNight){
-                withContext(Dispatchers.IO){
-                        database.insert(night)
-                }
+                database.insert(night)
         }
 
         fun onStopTracking(){
-                uiScope.launch {
+                viewModelScope.launch {
                         val oldNight = tonight.value ?: return@launch
                         oldNight.endTimeMilli = System.currentTimeMillis()
                         update(oldNight)
@@ -81,32 +76,24 @@ class SleepTrackerViewModel(
         }
 
         private suspend fun update(night: SleepNight){
-                withContext(Dispatchers.IO){
-                        database.update(night)
-                }
+                database.update(night)
         }
 
         fun onClear() {
-                uiScope.launch {
+                viewModelScope.launch {
                         clear()
                         tonight.value = null
                 }
         }
 
-        suspend fun clear() {
-                withContext(Dispatchers.IO){
-                        database.clear()
-                }
+        private suspend fun clear() {
+                database.clear()
         }
 
-        override fun onCleared() {
-                super.onCleared()
-                viewModelJob.cancel()
-        }
 
         /* pattern to use coroutine
         fun someWorkNeedToBeDone(){
-                uiScope.launch {
+                viewModelScope.launch {
                         suspendFunction()
                 }
         }
