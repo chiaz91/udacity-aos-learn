@@ -37,9 +37,10 @@ android {
     }
 
     // Always show the result of every unit test when running via command line, even if it passes.
-//    testOptions.unitTests {
+    testOptions.unitTests {
 //        includeAndroidResources = true
-//    }
+        returnDefaultValues = true
+    }
     packagingOptions {
         pickFirst  'META-INF/*'
     }
@@ -84,6 +85,8 @@ dependencies {
     // Once https://issuetracker.google.com/128612536 is fixed this can be fixed.
     implementation "androidx.fragment:fragment-testing:$fragmentVersion"
     implementation "androidx.test:core:$androidXTestCoreVersion"
+
+    implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
 
     // AndroidX Test - JVM testing
     testImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
