@@ -3,6 +3,7 @@ package com.udacity.project4.locationreminders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.udacity.project4.R
@@ -17,7 +18,7 @@ class ReminderDescriptionActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_ReminderDataItem = "EXTRA_ReminderDataItem"
 
-        //        receive the reminder object after the user clicks on the notification
+        // receive the reminder object after the user clicks on the notification
         fun newIntent(context: Context, reminderDataItem: ReminderDataItem): Intent {
             val intent = Intent(context, ReminderDescriptionActivity::class.java)
             intent.putExtra(EXTRA_ReminderDataItem, reminderDataItem)
@@ -26,12 +27,30 @@ class ReminderDescriptionActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityReminderDescriptionBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(
             this,
             R.layout.activity_reminder_description
         )
-//        TODO: Add the implementation of the reminder details
+
+        binding.lifecycleOwner = this
+        try {
+            binding.reminder = intent.getSerializableExtra(EXTRA_ReminderDataItem) as ReminderDataItem
+            binding.executePendingBindings()
+
+        } catch (e: Exception){
+            // show error when no reminder data can be found within intent
+            val dialog = AlertDialog.Builder(this)
+                .setTitle("Error")
+                .setMessage("No reminder data")
+                .setPositiveButton("Ok"){ _, _ ->
+                    finish()
+                }
+                .create()
+            dialog.show()
+        }
+
     }
 }

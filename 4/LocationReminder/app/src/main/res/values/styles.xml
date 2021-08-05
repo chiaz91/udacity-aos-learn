@@ -24,7 +24,12 @@
         <!--  <item name="android:windowBackground">@color/gray_dark</item> -->
     </style>
 
-
+    <style name="Label" >
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
 
     <style name="LRButton" >
         <item name="android:background">@color/colorAccent</item>

@@ -6,28 +6,56 @@
     <data>
         <!--Data item that holds the reminder details-->
         <variable
-            name="reminderDataItem"
+            name="reminder"
             type="com.udacity.project4.locationreminders.reminderslist.ReminderDataItem" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:orientation="vertical"
-        tools:context=".locationreminders.ReminderDescriptionActivity">
-        <!--TODO: add the design of the reminder details-->
+        android:padding="@dimen/padding_normal">
 
         <TextView
-            android:layout_width="match_parent"
+            style="@style/Label"
+            android:id="@+id/titleLabel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Reminder Details"
-            android:textSize="@dimen/text_size_large"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="@string/reminder_title" />
+
+        <TextView
+            android:id="@+id/titletxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{reminder.title}" />
+
+        <TextView
+            style="@style/Label"
+            android:id="@+id/descriptionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/reminder_desc"/>
+
+        <TextView
+            android:id="@+id/descriptiontxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{reminder.description}"/>
+
+        <TextView
+            style="@style/Label"
+            android:id="@+id/locationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/reminder_location"/>
+
+        <TextView
+            android:id="@+id/locationtxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{reminder.location}"/>
 
     </LinearLayout>
 </layout>
