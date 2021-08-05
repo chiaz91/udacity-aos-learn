@@ -11,10 +11,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -52,9 +49,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val zoomLevel = 15f
 
 
-        val ntu = LatLng(latitude, longitude)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ntu, zoomLevel))
-        map.addMarker(MarkerOptions().position(ntu).title("Marker in NTU"))
+        val ntuLatLng = LatLng(latitude, longitude)
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ntuLatLng, zoomLevel))
+        map.addMarker(MarkerOptions().position(ntuLatLng).title("Marker in NTU"))
+
+        // adding an overlay image on map
+        val overlaySize = 100f
+        val androidOverlay = GroundOverlayOptions()
+            .image(BitmapDescriptorFactory.fromResource(R.drawable.android))
+            .position(ntuLatLng, overlaySize)
+        map.addGroundOverlay(androidOverlay)
 
         setMapLongClick(map)
         setPoiClick(map)
