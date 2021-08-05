@@ -2,6 +2,11 @@
 <resources>
     <dimen name="font_normal">16sp</dimen>
     <dimen name="font_small">12sp</dimen>
+    <dimen name="font_overlay">20sp</dimen>
     <dimen name="padding_normal">16dp</dimen>
-    <dimen name="margin_half">8dp</dimen>
+
+    <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_tiny">4dp</dimen>
+    <dimen name="picture_of_day_height">220dp</dimen>
 </resources>

@@ -18,7 +18,7 @@
         <FrameLayout
             android:id="@+id/activity_main_image_of_the_day_layout"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="@dimen/picture_of_day_height"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -32,15 +32,12 @@
                 app:srcCompat="@drawable/placeholder_picture_of_day"/>
 
             <TextView
+                style="@style/AppText.OverlayText"
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:textSize="20sp"
+                android:padding="@dimen/padding_normal"
                 android:layout_gravity="bottom"
-                android:background="#55010613"
                 android:text="@string/image_of_the_day" />
         </FrameLayout>
 

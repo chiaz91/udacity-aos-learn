@@ -48,7 +48,7 @@
             android:id="@+id/close_approach_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_half"
+            android:layout_marginTop="@dimen/margin_small"
             android:text="@{asteroid.closeApproachDate}"
             app:layout_constraintEnd_toStartOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="parent"

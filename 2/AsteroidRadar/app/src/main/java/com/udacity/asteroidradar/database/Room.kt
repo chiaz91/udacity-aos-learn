@@ -17,6 +17,8 @@ interface AsteroidDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPictureOfTheDay(picture: DatabasePicture)
+
+    // TODO: allow delete asteroids before today
 }
 
 @Database(entities = [DatabaseAsteroid::class, DatabasePicture::class], version = 2)
