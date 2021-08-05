@@ -71,6 +71,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+        Log.i(TAG, "Google map is ready!")
         // add the map setup implementation
         // add style to the map
         map = googleMap
