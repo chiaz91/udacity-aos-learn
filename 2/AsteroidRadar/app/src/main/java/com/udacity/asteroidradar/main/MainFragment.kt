@@ -6,10 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.AsteroidAdapter
 import com.udacity.asteroidradar.AsteroidClickListener
-import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
@@ -52,23 +50,7 @@ class MainFragment : Fragment() {
             asteroidList.observe(viewLifecycleOwner, Observer { asteroids ->
                 adapter.submitList(asteroids)
             })
-            pictureOfDay.observe(viewLifecycleOwner, Observer {picture ->
-                picture?.let {
-                    if (picture.mediaType == "image") {
-                        loadPictureOfDay(picture)
-                    }
-                }
-            })
         }
-    }
-
-    private fun loadPictureOfDay(pictureOfDay: PictureOfDay) {
-        Picasso.with(binding.activityMainImageOfTheDay.context)
-            .load(pictureOfDay.url)
-            .placeholder(R.drawable.loading_img)
-            .error(R.drawable.ic_broken_image)
-            .into(binding.activityMainImageOfTheDay)
-        binding.activityMainImageOfTheDay.contentDescription = pictureOfDay.title
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
