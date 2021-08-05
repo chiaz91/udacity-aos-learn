@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
 
@@ -50,6 +51,7 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     // const values
+    private var colorText = 0
     private val colorPrimary = resources.getColor(R.color.colorPrimary, context.theme)
     private val colorPrimaryDark = resources.getColor(R.color.colorPrimaryDark, context.theme)
     private val colorAccent = resources.getColor(R.color.colorAccent, context.theme)
@@ -65,12 +67,14 @@ class LoadingButton @JvmOverloads constructor(
     private var rectLinearProgress = Rect()
     private var rectfArcProgress = RectF()
 
-
     init {
         isClickable = true
-        text="TEST"
-        updateDrawBounds()
-        // TODO: reading from attribute
+        text = resources.getString(R.string.download)
+        // reading from attribute
+        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
+            colorText = getColor(R.styleable.LoadingButton_android_textColor, Color.WHITE)
+            paint.textSize = getDimension(R.styleable.LoadingButton_android_textSize, TEXT_SIZE_DEFAULT)
+        }
     }
 
     override fun performClick(): Boolean {
@@ -81,17 +85,16 @@ class LoadingButton @JvmOverloads constructor(
         return true
     }
 
-    override fun onDraw(canvas: Canvas) {
+    override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas.drawOutline()
-        if (buttonState == ButtonState.Loading){
-            canvas.drawLinearProgress()
-            canvas.drawArcProgress()
+        canvas?.apply {
+            drawOutline()
+            if (buttonState == ButtonState.Loading){
+                drawLinearProgress()
+                drawArcProgress()
+            }
+            drawText(text)
         }
-        canvas.drawTextOnCenter( text)
-
-        // for test only
-        canvas.drawDebugGrid()
     }
 
     private fun Canvas.drawOutline(){
@@ -112,15 +115,11 @@ class LoadingButton @JvmOverloads constructor(
         restore()
     }
 
-    private fun Canvas.drawTextOnCenter(text: String){
-        paint.color = Color.WHITE
+    private fun Canvas.drawText(text: String){
+        paint.color = colorText
         drawText(text, center.x, center.y-rectText.centerY().toFloat(), paint);
     }
 
-    private fun Canvas.drawDebugGrid(){
-        drawLine(0f, center.y, widthSize.toFloat(), center.y , paint)
-        drawLine(center.x, 0f, center.x, heightSize.toFloat(), paint)
-    }
 
     private fun updateDrawBounds(){
         paint.getTextBounds(text, 0, text.length, rectText)
@@ -132,6 +131,7 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
         val w: Int = resolveSizeAndState(minw, widthMeasureSpec, 1)
         val h: Int = resolveSizeAndState(MeasureSpec.getSize(w), heightMeasureSpec, 0)
