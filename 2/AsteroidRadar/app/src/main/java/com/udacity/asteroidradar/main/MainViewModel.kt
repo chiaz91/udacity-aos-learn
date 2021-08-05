@@ -1,10 +1,7 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
 import kotlinx.coroutines.launch
@@ -13,6 +10,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val database = getDatabase(application)
     private val asteroidRepository = AsteroidRepository(database)
     private val asteroidFilter = MutableLiveData<AsteroidFilter>(AsteroidFilter.SHOW_ALL)
+
+    private val _status = MutableLiveData<ApiStatus>()
+    val status: LiveData<ApiStatus>
+        get() = _status
 
     fun updateFilter(filter: AsteroidFilter) {
         asteroidFilter.value = filter
@@ -29,9 +30,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            // retrieve data from network
-            asteroidRepository.refreshAsteroid()
-            asteroidRepository.refreshPictureOfDay()
+            _status.value = ApiStatus.LOADING
+            try{
+                asteroidRepository.refreshAsteroid()
+                asteroidRepository.refreshPictureOfDay()
+                _status.value = ApiStatus.DONE
+            }catch (e: Exception){
+                _status.value = ApiStatus.ERROR
+            }
         }
     }
 }

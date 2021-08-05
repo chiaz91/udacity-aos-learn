@@ -39,17 +39,27 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // observe database changes
-        viewModel.asteroidList.observe(viewLifecycleOwner, Observer { asteroids ->
-            adapter.submitList(asteroids)
-        })
-        viewModel.pictureOfDay.observe(viewLifecycleOwner, Observer {picture ->
-            picture?.let {
-                if (picture.mediaType == "image") {
-                    loadPictureOfDay(picture)
+
+        with(viewModel){
+            // observe api status changes
+            status.observe(viewLifecycleOwner, Observer {
+                when(it){
+                    ApiStatus.LOADING -> binding.statusLoadingWheel.visibility = View.VISIBLE
+                    else -> binding.statusLoadingWheel.visibility = View.GONE
                 }
-            }
-        })
+            })
+            // observe database changes
+            asteroidList.observe(viewLifecycleOwner, Observer { asteroids ->
+                adapter.submitList(asteroids)
+            })
+            pictureOfDay.observe(viewLifecycleOwner, Observer {picture ->
+                picture?.let {
+                    if (picture.mediaType == "image") {
+                        loadPictureOfDay(picture)
+                    }
+                }
+            })
+        }
     }
 
     private fun loadPictureOfDay(pictureOfDay: PictureOfDay) {
