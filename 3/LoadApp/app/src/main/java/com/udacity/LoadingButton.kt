@@ -81,6 +81,8 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
+    // TODO: save/load state missing
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!isEnabled) return false
         if (buttonState == ButtonState.Loading) return super.onTouchEvent(event)
@@ -109,6 +111,7 @@ class LoadingButton @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        // TODO: learn ViewOutlineProvider & Outline to create shadow
 
         center.apply {
             x = w/2f

@@ -12,8 +12,6 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
@@ -23,8 +21,13 @@ import kotlinx.android.synthetic.main.content_main.*
 
 const val NOTIFICATION_ID = 1001
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val URL1 = "https://github.com/bumptech/glide/archive/master.zip"
+        private const val URL2 = "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
+        private const val URL3 = "https://github.com/square/retrofit/archive/master.zip"
+        private const val CHANNEL_ID = "channelId"
+    }
     private var downloadID: Long = 0
-
     private val notificationManager: NotificationManager by lazy {
         getSystemService(NotificationManager::class.java) as NotificationManager
     }
@@ -100,17 +103,6 @@ class MainActivity : AppCompatActivity() {
         custom_button.loading=true
     }
 
-//    private fun cancelDownload(){
-//        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-//        downloadManager.remove(downloadID)
-//    }
-
-    companion object {
-        private const val URL1 = "https://github.com/bumptech/glide/archive/master.zip"
-        private const val URL2 = "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
-        private const val URL3 = "https://github.com/square/retrofit/archive/master.zip"
-        private const val CHANNEL_ID = "channelId"
-    }
 
     // notification
     fun NotificationManager.createChannel(id:String, name:String){
@@ -153,15 +145,15 @@ class MainActivity : AppCompatActivity() {
 
 
     // option menu
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.action_view_downloads -> toViewDownload()
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.menu_main, menu)
+//        return super.onCreateOptionsMenu(menu)
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when(item.itemId){
+//            R.id.action_view_downloads -> promptViewDownload()
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 }

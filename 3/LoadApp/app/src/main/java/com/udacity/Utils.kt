@@ -1,6 +1,7 @@
 package com.udacity;
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
@@ -8,15 +9,12 @@ import android.database.Cursor
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.InputType
 import android.util.Log
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
-
-fun Activity.toViewDownload(){
-    val viewDownloads = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)
-    startActivity(viewDownloads)
-}
 
 fun Activity.toast(message: String): Toast {
     val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
@@ -50,7 +48,7 @@ fun LoadingButton.simulateLoading(){
 
     Handler(Looper.getMainLooper()).postDelayed({
         loading = false
-    }, 3000)
+    }, 10000)
 }
 
 fun Bundle.log() {
@@ -71,6 +69,35 @@ fun Cursor.log(){
     }
     Log.i("load.cursor", "}")
 }
+
+fun Activity.toViewDownload(){
+    val viewDownloads = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)
+    startActivity(viewDownloads)
+}
+
+fun Activity.promptViewDownload(){
+    val inputId = EditText(this)
+    inputId.hint = "Enter download id"
+    inputId.inputType = InputType.TYPE_CLASS_NUMBER
+
+    AlertDialog.Builder(this)
+        .setTitle("DEBUG")
+        .setMessage("View download status on DetailActivity.")
+        .setView(inputId)
+        .setPositiveButton("View"){ _,_ ->
+            try{
+                var id = inputId.text.toString().toLong()
+
+                val intent = Intent(this, DetailActivity::class.java)
+                intent.putExtra("download_id", id)
+                startActivity(intent)
+            }catch (e:Exception){
+                toViewDownload( )
+            }
+        }
+        .show()
+}
+
 
 // dirty methods :P
 fun getStatusString(status: Int): String{
