@@ -8,6 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md#custom-layout -->
+    <style name="LoginTheme" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="colorPrimary">@color/green_cyan_light</item>
+        <item name="colorPrimaryDark">@color/green_cyan_light</item>
+        <item name="android:windowBackground">@color/green_cyan_light</item>
+    </style>
+
+
 
     <style name="LRButton" >
         <item name="android:background">@color/colorAccent</item>
