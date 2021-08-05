@@ -62,11 +62,6 @@ class GameFragment : Fragment() {
         }
 
         with(viewModel){
-//            score.observe(viewLifecycleOwner, Observer { newScore -> updateScoreText(newScore) })
-//            word.observe(viewLifecycleOwner, Observer { newWord -> updateWordText(newWord)})
-            currentTime.observe(viewLifecycleOwner, Observer { time ->
-                binding.timerText.text = DateUtils.formatElapsedTime(time)
-            })
             eventGameFinished.observe(viewLifecycleOwner, Observer { hasFinished ->
                 if (hasFinished){
                     gameFinished()
