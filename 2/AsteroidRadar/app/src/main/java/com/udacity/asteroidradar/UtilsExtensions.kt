@@ -12,7 +12,7 @@ fun Date.addDays(days: Int = 0): Date {
 }
 
 fun Date.format(dateFormat: String = Constants.API_QUERY_DATE_FORMAT): String{
-    val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
+    val dateFormat = SimpleDateFormat(dateFormat, Locale.getDefault())
     return dateFormat.format(this)
 }
 

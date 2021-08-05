@@ -66,6 +66,13 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        viewModel.updateFilter(
+            when (item.itemId) {
+                R.id.show_week -> AsteroidFilter.SHOW_WEEK
+                R.id.show_today -> AsteroidFilter.SHOW_TODAY
+                else -> AsteroidFilter.SHOW_ALL
+            }
+        )
         return true
     }
 }

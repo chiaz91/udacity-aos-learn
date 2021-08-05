@@ -20,11 +20,22 @@ import retrofit2.HttpException
 import java.util.*
 
 class AsteroidRepository(private val database: AsteroidDatabase) {
-    val asteroidList: LiveData<List<Asteroid>> = Transformations.map(database.asteroid.getListAsteroid()) {
+    val asteroidForAll: LiveData<List<Asteroid>> = Transformations.map(database.asteroid.getAll()) {
+        it?.asDomainModel()
+    }
+    val asteroidForWeek: LiveData<List<Asteroid>> = Transformations.map(
+            database.asteroid.getBetweenDates(Date().format(), Date().addDays(7).format())
+        ) {
+        it?.asDomainModel()
+    }
+    val asteroidForToday: LiveData<List<Asteroid>> = Transformations.map(
+        database.asteroid.getForDate(Date().format())
+    ) {
         it?.asDomainModel()
     }
 
-    val pictureOfTheDayData: LiveData<PictureOfDay> = Transformations.map(database.asteroid.getPictureOfTheDay()) {
+
+    val pictureOfTheDayData: LiveData<PictureOfDay> = Transformations.map(database.picture.getPictureOfTheDay()) {
         it?.asDomainModel()
     }
 
@@ -42,7 +53,7 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
                 // insert into into database
                 database.asteroid.insertAllAsteroids(asteroidParsed.asDatabaseModel())
             } catch (e: HttpException) {
-                Log.e("refreshAsteroid", e.localizedMessage)
+                Log.e("refreshAsteroid", e.message())
             }
         }
     }
@@ -53,9 +64,9 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
                 // request for picture of the day
                 val pictureOfTheDay = AsteroidApi.retrofitService.getPictureOfTheDayAsync().await()
                 // insert into database
-                database.asteroid.insertPictureOfTheDay(pictureOfTheDay.asDatabaseModel())
+                database.picture.insertPictureOfTheDay(pictureOfTheDay.asDatabaseModel())
             } catch (e: HttpException) {
-                Log.e("refreshPictureOfDay", e.localizedMessage)
+                Log.e("refreshPictureOfDay", e.message())
             }
         }
     }
