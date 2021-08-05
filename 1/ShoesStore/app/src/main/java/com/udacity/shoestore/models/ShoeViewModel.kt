@@ -10,7 +10,7 @@ class ShoeViewModel: ViewModel() {
         get() = _shoes
 
     init{
-        _shoes.value = mutableListOf<Shoe>(
+        _shoes.value = mutableListOf(
             // dummy data
             Shoe("Nike Revolution 5", 7.5, "Nike", "The Nike Revolution 5 cushions your stride with soft foam to keep you running in comfort. Lightweight knit material wraps your foot in breathable support, while a minimalist design fits in just about anywhere your day takes you."),
             Shoe("NMD_R1 SHOES", 8.5, "Adidas", "Continue the NMD legacy in these adidas NMD_R1 Shoes. Plush Boost cushioning keeps your city adventure feeling like you're walking on clouds. And since your head is sometimes up there, it's not a bad place for your feet to be too. Great for those sunup to sundown days, the soft knit textile upper doubles down on the comfort."),

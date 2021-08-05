@@ -10,55 +10,55 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingStart="@dimen/padding_default"
+        android:paddingEnd="@dimen/padding_default"
         tools:context=".fragments.ShoeDetailsFragment">
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="name" />
+            android:text="@string/name" />
 
         <EditText
             android:id="@+id/shoe_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter shoe name" />
+            android:hint="@string/enter_shoe_name" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="size" />
+            android:text="@string/size" />
 
         <EditText
             android:id="@+id/shoe_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
-            android:hint="Enter shoe size" />
+            android:hint="@string/enter_shoe_size" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="company" />
+            android:text="@string/company" />
 
         <EditText
             android:id="@+id/company"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter company name" />
+            android:hint="@string/enter_company_name" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="description" />
+            android:text="@string/description" />
 
         <EditText
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter description" />
+            android:hint="@string/enter_description" />
 
 
     </LinearLayout>

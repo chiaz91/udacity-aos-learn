@@ -10,17 +10,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
         tools:context=".fragments.LoginFragment">
 
 
         <TextView
+            style="@style/HeaderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:text="Login"
-            android:textColor="@android:color/white"
-            android:textSize="25sp"
+            android:layout_marginBottom="@dimen/margin_default"
+            android:text="@string/login"
             app:layout_constraintBottom_toTopOf="@+id/form_login"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -31,7 +29,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:orientation="vertical"
-            android:padding="16dp"
+            android:padding="@dimen/padding_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,25 +38,25 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Email" />
+                android:text="@string/email" />
 
             <EditText
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter email" />
+                android:hint="@string/enter_email" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Password" />
+                android:text="@string/password" />
 
             <EditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter Password"
+                android:hint="@string/enter_password"
                 android:inputType="textPassword" />
         </LinearLayout>
 
@@ -66,16 +64,16 @@
             android:id="@+id/btn_login_exist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Existing Login"
+            android:layout_marginTop="@dimen/margin_default"
+            android:text="@string/existing_login"
             app:layout_constraintTop_toBottomOf="@+id/form_login" />
 
         <Button
             android:id="@+id/btn_login_new"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="New Login"
+            android:layout_marginTop="@dimen/margin_half"
+            android:text="@string/new_login"
             app:layout_constraintTop_toBottomOf="@+id/btn_login_exist" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
