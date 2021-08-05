@@ -161,8 +161,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissi
                 // default location to Googleplex
                 var latLng = LatLng(37.42206, -122.08409)
                 if (task.isSuccessful ) {
-                    // return the current location of the device.
-                    latLng = LatLng(task.result!!.latitude, task.result!!.longitude)
+                    try{
+                        // return the current location of the device.
+                        latLng = LatLng(task.result!!.latitude, task.result!!.longitude)
+                    } catch (e: Exception){
+                        e.printStackTrace()
+                    }
                 }
                 callback(latLng)
             }

@@ -41,6 +41,7 @@ fun createGeofencePendingIntent(context: Context): PendingIntent{
 @SuppressLint("MissingPermission")
 fun GeofencingClient.addGeofenceForReminder(reminder: ReminderDataItem){
     Log.i(TAG, "addGeofenceForReminder start")
+    Log.i(TAG, reminder.toString())
     val request = createGeofenceRequest(reminder.id, reminder.latitude!!, reminder.longitude!!)
     val pendingIntent = createGeofencePendingIntent(this.applicationContext)
     this.addGeofences(request,pendingIntent)?.run {

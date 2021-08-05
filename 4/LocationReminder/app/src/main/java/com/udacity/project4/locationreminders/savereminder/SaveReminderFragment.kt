@@ -79,6 +79,7 @@ class SaveReminderFragment : BaseFragment(), EasyPermissions.PermissionCallbacks
             //  1) add a geofencing request
             //  2) save the reminder to the local db
             try{
+                // TODO: additional checks on permission and device location?
                 geofencingClient.addGeofenceForReminder(reminder)
                 _viewModel.validateAndSaveReminder(reminder)
             } catch (e:Exception ){
@@ -189,7 +190,7 @@ class SaveReminderFragment : BaseFragment(), EasyPermissions.PermissionCallbacks
         }
         locationSettingsResponseTask.addOnCompleteListener {
             if ( it.isSuccessful ) {
-                _viewModel.showToast.value = "location turned on"
+                Log.i(TAG, "device's location is on")
             }
         }
     }

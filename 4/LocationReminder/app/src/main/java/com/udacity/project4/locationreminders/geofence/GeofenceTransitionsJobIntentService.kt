@@ -2,6 +2,7 @@ package com.udacity.project4.locationreminders.geofence
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.JobIntentService
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
@@ -42,6 +43,10 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
         // Get geofences from intent
         val geofenceEvent = GeofencingEvent.fromIntent(intent)
         val triggeringGeofenceList = geofenceEvent.triggeringGeofences
+        Log.i(TAG, "triggering geofences: ${triggeringGeofenceList.size}")
+        triggeringGeofenceList.forEach{ geofence ->
+            Log.i(TAG, "$geofence")
+        }
 
         // Send notification
         if (triggeringGeofenceList.size > 0) {
