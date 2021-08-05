@@ -22,4 +22,5 @@
     <string name="enter_company_name">Enter company name</string>
     <string name="description">description</string>
     <string name="enter_description">Enter description</string>
+    <string name="cancel">Cancel</string>
 </resources>
