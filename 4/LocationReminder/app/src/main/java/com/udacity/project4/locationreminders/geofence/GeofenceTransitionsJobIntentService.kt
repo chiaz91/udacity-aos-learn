@@ -44,20 +44,18 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
         val geofenceEvent = GeofencingEvent.fromIntent(intent)
         val triggeringGeofenceList = geofenceEvent.triggeringGeofences
         Log.i(TAG, "triggering geofences: ${triggeringGeofenceList.size}")
-        triggeringGeofenceList.forEach{ geofence ->
-            Log.i(TAG, "$geofence")
-        }
 
         // Send notification
-        if (triggeringGeofenceList.size > 0) {
-            sendNotification(triggeringGeofenceList)
+        triggeringGeofenceList?.forEach{ geofence ->
+            Log.i(TAG, "$geofence")
+            sendNotification(geofence)
         }
     }
 
 
-    private fun sendNotification(triggeringGeofences: List<Geofence>) {
+    private fun sendNotification(triggeringGeofence: Geofence) {
         // get the request id of the current geofence
-        val requestId = triggeringGeofences[0].requestId
+        val requestId = triggeringGeofence.requestId
 
         // Get the local repository instance (fixed)
         val remindersLocalRepository: ReminderDataSource by inject()
