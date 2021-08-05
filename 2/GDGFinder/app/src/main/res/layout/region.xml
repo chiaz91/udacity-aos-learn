@@ -5,4 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    app:checkedIconVisible="true"
+    tools:checked="true"
+    app:chipBackgroundColor="@color/selected_highlight"
     style="@style/Widget.MaterialComponents.Chip.Choice"/>
