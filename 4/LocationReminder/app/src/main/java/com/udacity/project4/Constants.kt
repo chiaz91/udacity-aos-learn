@@ -1,0 +1,9 @@
+package com.udacity.project4
+
+
+
+
+// Request Codes
+const val REQ_TURN_DEVICE_LOCATION_ON = 1001
+const val REQ_PERMISSION_FOREGROUND_LOCATION = 1002
+const val REQ_PERMISSION_FOREGROUND_BACKGROUND_LOCATION = 1003

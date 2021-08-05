@@ -17,6 +17,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.udacity.project4.R
+import com.udacity.project4.REQ_PERMISSION_FOREGROUND_BACKGROUND_LOCATION
+import com.udacity.project4.REQ_PERMISSION_FOREGROUND_LOCATION
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
@@ -29,10 +31,8 @@ import java.util.*
 
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback,  EasyPermissions.PermissionCallbacks {
-    private val TAG: String = "frag.select_location"
+    private val TAG: String = "cy.frag.select_location"
     private val DEFAULT_ZOOM = 15f;
-    private val REQ_PERMISSION_FOREGROUND_LOCATION = 1001
-    private val REQ_PERMISSION_FOREGROUND_BACKGROUND_LOCATION = 1002
     private val runningQOrLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
 
     //Use Koin to get the view model of the SaveReminder
