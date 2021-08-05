@@ -42,6 +42,7 @@ class LoadingButton @JvmOverloads constructor(
     private var widthSize = 0
     private var heightSize = 0
     private var progressOffsetActual=0f
+    private var cornerRadius = 0f;
 
     // drawing and bounds related
     private var center = PointF()
@@ -50,6 +51,7 @@ class LoadingButton @JvmOverloads constructor(
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
     }
+    private val pathOutline = Path()
     private val rectView = Rect()
     private var rectText = Rect()
     private var rectLinearProgress = Rect()
@@ -66,6 +68,7 @@ class LoadingButton @JvmOverloads constructor(
         text = resources.getString(R.string.download)
         // reading from attribute
         context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
+            cornerRadius = getDimension(R.styleable.LoadingButton_cornerRadius, 15f)
             colorText = getColor(R.styleable.LoadingButton_android_textColor, Color.WHITE)
             paint.textSize = getDimension(R.styleable.LoadingButton_android_textSize, TEXT_SIZE_DEFAULT)
         }
@@ -124,12 +127,18 @@ class LoadingButton @JvmOverloads constructor(
         paint.getTextBounds(text, 0, text.length, rectText)
         rectfArcProgress.set(-radius, -radius, radius, radius)
         progressOffsetActual = center.x + rectText.centerX() + radius + PROGRESS_OFFSET
+        val rectF = RectF(rectView);
+        pathOutline.reset()
+        pathOutline.addRoundRect(rectF, cornerRadius, cornerRadius, Path.Direction.CW);
+        pathOutline.close();
     }
 
     // Drawing
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.apply {
+            save()
+            clipPath(pathOutline)
             drawOutline()
             when (buttonState){
                 ButtonState.Loading -> {
@@ -140,6 +149,7 @@ class LoadingButton @JvmOverloads constructor(
                 else -> {}
             }
             drawText(text)
+            restore()
         }
     }
 

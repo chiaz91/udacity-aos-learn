@@ -3,5 +3,6 @@
     <declare-styleable name="LoadingButton">
         <attr name="android:textColor" format="color"/>
         <attr name="android:textSize" format="dimension"/>
+        <attr name="cornerRadius" format="dimension"/>
     </declare-styleable>
 </resources>
