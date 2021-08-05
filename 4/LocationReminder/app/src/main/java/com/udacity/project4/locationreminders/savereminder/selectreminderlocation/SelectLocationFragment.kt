@@ -235,17 +235,23 @@ class SelectLocationFragment : BasePermissionFragment(), OnMapReadyCallback {
         // send back the selected location details to the view model
         // and navigate back to the previous fragment to save the reminder and add the geofence
         _viewModel.selectedPOI.value?.let {
-            _viewModel.reminderSelectedLocationStr.value = it.name
-            _viewModel.latitude.value = it.latLng.latitude
-            _viewModel.longitude.value = it.latLng.longitude
-            _viewModel.navigationCommand.value = NavigationCommand.Back
+            with(_viewModel){
+                reminderSelectedLocationStr.value = it.name
+                latitude.value = it.latLng.latitude
+                longitude.value = it.latLng.longitude
+                navigationCommand.value = NavigationCommand.Back
+            }
+
         } ?: run{
             // for testing, uses default location
-            _viewModel.selectedPOI.value = createPoi(latLngGoogleplex)
-            _viewModel.reminderSelectedLocationStr.value = "Googleplex"
-            _viewModel.latitude.value = latLngGoogleplex.latitude
-            _viewModel.longitude.value = latLngGoogleplex.longitude
-            _viewModel.navigationCommand.value = NavigationCommand.Back
+            with(_viewModel){
+                selectedPOI.value = createPoi(latLngGoogleplex)
+                reminderSelectedLocationStr.value = "Googleplex"
+                latitude.value = latLngGoogleplex.latitude
+                longitude.value = latLngGoogleplex.longitude
+                navigationCommand.value = NavigationCommand.Back
+            }
+
         }
     }
 

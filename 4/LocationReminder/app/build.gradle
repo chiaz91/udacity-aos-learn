@@ -20,9 +20,9 @@ android {
 
         multiDexEnabled = true
 
-        // generate api key from local properties
-//        buildConfigField "String", "MAP_API_KEY", localProperties['mapKey']
-//        resValue("string", "google_maps_key", localProperties['mapKey'])
+        // TODO: generate api key from local properties
+//        buildConfigField "String", "MAP_API_KEY", "\"${localProperties['mapKey']}\""
+//        resValue("string", "test", "hello world")
     }
     buildTypes {
         release {
@@ -38,10 +38,6 @@ android {
         returnDefaultValues = true
     }
 
-    //dataBinding {
-    //    enabled = true
-    //    enabledForTests = true
-    //}
     buildFeatures {
         dataBinding true
     }
@@ -86,7 +82,7 @@ dependencies {
     implementation "org.koin:koin-android:$koinVersion"
     implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
 
-    // Other
+    // TODO: remove EasyPermission!!
     implementation 'com.vmadalin:easypermissions-ktx:1.0.0'
 
 
