@@ -27,7 +27,6 @@
             android:id="@+id/form_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:orientation="vertical"
             android:padding="@dimen/padding_default"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.udacity.shoestore.R
 import com.udacity.shoestore.databinding.FragmentShoeListBinding
+import com.udacity.shoestore.models.Shoe
 import com.udacity.shoestore.models.ShoeViewModel
 
 
@@ -30,18 +32,42 @@ class ShoeListFragment : Fragment() {
 
         // retrieving view mode
         viewModel = ViewModelProvider(requireActivity()).get(ShoeViewModel::class.java)
-        binding.shoesContainer.removeAllViews()
-        viewModel.shoes.value?.forEachIndexed{ index, shoe ->
-            val itemView = inflater.inflate(R.layout.row_shoe, binding.shoesContainer,false)
-            with(itemView){
-                findViewById<TextView>(R.id.name).text = shoe.name
-                findViewById<TextView>(R.id.size).text = "Size: ${shoe.size}"
-                findViewById<TextView>(R.id.company).text = "Company: ${shoe.company}"
-                findViewById<TextView>(R.id.description).text = "Description: ${shoe.description}"
+        viewModel.shoes?.observe(viewLifecycleOwner, Observer { shoes ->
+            // clear previous inflated views
+            binding.shoesContainer.removeAllViews()
+
+            // manually create create item views
+            if (shoes.size == 0){
+                val emptyView = createEmptyView()
+                binding.shoesContainer.addView(emptyView)
+            } else {
+                shoes.forEach{ shoe ->
+                    val itemView = createItemViewForShoe(shoe)
+                    binding.shoesContainer.addView(itemView)
+                }
             }
-            binding.shoesContainer.addView(itemView)
-        }
-        binding.invalidateAll()
+
+            binding.invalidateAll()
+        })
+
         return binding.root
+    }
+
+    private fun createEmptyView(): View {
+        val empty = TextView(requireContext())
+        empty.text = "No shoes found"
+        return empty
+    }
+
+    private fun createItemViewForShoe(shoe: Shoe): View{
+        val itemView = layoutInflater.inflate(R.layout.row_shoe, binding.shoesContainer,false)
+        with(itemView){
+            // todo: extract for string resource
+            findViewById<TextView>(com.udacity.shoestore.R.id.name).text = shoe.name
+            findViewById<TextView>(com.udacity.shoestore.R.id.size).text = "Size: ${shoe.size}"
+            findViewById<TextView>(com.udacity.shoestore.R.id.company).text = "Company: ${shoe.company}"
+            findViewById<TextView>(com.udacity.shoestore.R.id.description).text = "Description: ${shoe.description}"
+        }
+        return itemView
     }
 }

@@ -58,7 +58,8 @@ class ShoeDetailsFragment : Fragment() {
             viewModel.addShoe( Shoe(name, size,company, description))
 
             // navigate back
-            findNavController().popBackStack()
+//            findNavController().popBackStack()
+            findNavController().navigate(ShoeDetailsFragmentDirections.actionShoeDetailsFragmentToShoeListFragment())
         } catch (e: Exception){
             Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             e.printStackTrace()

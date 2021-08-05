@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingStart="16dp"
-    android:paddingTop="8dp"
-    android:paddingEnd="16dp"
-    android:paddingBottom="8dp">
+    android:paddingStart="@dimen/padding_default"
+    android:paddingTop="@dimen/padding_half"
+    android:paddingEnd="@dimen/padding_default"
+    android:paddingBottom="@dimen/padding_half">
 
     <TextView
         android:id="@+id/name"
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
-        tools:text="size: 40" />
+        tools:text="size: 6.0" />
 
     <TextView
         android:id="@+id/company"

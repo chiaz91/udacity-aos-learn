@@ -10,10 +10,10 @@
     <string name="existing_login">Existing Login</string>
     <string name="new_login">New Login</string>
     <string name="welcome">Welcome</string>
-    <string name="welcome_msg">DESC</string>
+    <string name="welcome_msg">thank you for choosing ShoeStore, hope you would like it :D</string>
     <string name="next">Next</string>
     <string name="instruction">Instruction</string>
-    <string name="instruction_msg">DESC</string>
+    <string name="instruction_msg">Now press next to start using the app</string>
     <string name="name">Name</string>
     <string name="enter_shoe_name">Enter shoe name</string>
     <string name="size">Size</string>
