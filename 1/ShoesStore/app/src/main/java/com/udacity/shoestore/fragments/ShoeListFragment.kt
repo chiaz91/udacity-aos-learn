@@ -1,15 +1,14 @@
 package com.udacity.shoestore.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.udacity.shoestore.R
 import com.udacity.shoestore.databinding.FragmentShoeListBinding
 import com.udacity.shoestore.models.Shoe
@@ -24,6 +23,8 @@ class ShoeListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
+
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_shoe_list, container, false)
         binding.fab.setOnClickListener{
@@ -51,6 +52,22 @@ class ShoeListFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.common, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId){
+            R.id.action_logout -> logout()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun logout(){
+        findNavController().navigate(ShoeListFragmentDirections.actionShoeListFragmentToLoginFragment())
     }
 
     private fun createEmptyView(): View {

@@ -7,9 +7,12 @@
 
     </data>
 
+    <!-- So if uses snackbar messages, FAB will not be blocked by the message -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <!-- To allow scrolling -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

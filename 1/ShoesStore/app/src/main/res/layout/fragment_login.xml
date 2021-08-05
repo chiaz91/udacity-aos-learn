@@ -7,6 +7,7 @@
 
     </data>
 
+    <!--  ConstraintLayout is used as I wanted the login form presented in center of the screen  -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,6 +24,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <!-- Linear Layout is used to wrap the login form, so entire form can be center aligned -->
         <LinearLayout
             android:id="@+id/form_login"
             android:layout_width="match_parent"

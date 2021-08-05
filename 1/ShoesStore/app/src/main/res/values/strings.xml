@@ -23,4 +23,5 @@
     <string name="description">description</string>
     <string name="enter_description">Enter description</string>
     <string name="cancel">Cancel</string>
+    <string name="log_out">Log out</string>
 </resources>
