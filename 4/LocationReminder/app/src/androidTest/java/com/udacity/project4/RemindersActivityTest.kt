@@ -97,9 +97,13 @@ class RemindersActivityTest :
 
         // save reminder and ensure it's displayed
         onView(withId(R.id.saveReminder)).perform(click())
+
+        onView(withText(R.string.reminder_saved))
+            .inRoot(ToastMatcher())
+            .check(matches(isDisplayed()))
         onView(withText("Test")).check(matches(isDisplayed()))
         onView(withText("Description")).check(matches(isDisplayed()))
-
+        
         activityScenario.close()
     }
 

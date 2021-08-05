@@ -89,6 +89,20 @@ class RemindersLocalRepositoryTest {
     }
 
     @Test
+    fun testGetReminderById_invalidId() = runBlocking {
+        // Save one reminder
+        repository.saveReminder(reminder1)
+
+        // Verify reminder data from db
+        val result = repository.getReminder("invalid_id")
+        assertThat(result, not(nullValue()))
+        assertThat(result is Result.Error, `is`(true))
+
+        val message = (result as Result.Error).message
+        assertThat(message, `is`("Reminder not found!"))
+    }
+
+    @Test
     fun testGetReminders() = runBlocking {
         // Save multiple reminders
         repository.saveReminder(reminder1)

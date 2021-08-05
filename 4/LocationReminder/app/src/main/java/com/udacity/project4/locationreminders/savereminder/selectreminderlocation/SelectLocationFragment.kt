@@ -107,7 +107,7 @@ class SelectLocationFragment : BasePermissionFragment(), OnMapReadyCallback {
         } else {
             requestForegroundLocationPermissions()
         }
-        _viewModel.showToast.value = getString(R.string.select_poi)
+//        _viewModel.showToast.value = getString(R.string.select_poi)
         _viewModel.selectedPOI.observe(viewLifecycleOwner, androidx.lifecycle.Observer { poi ->
             try{
                 val camUpdate = CameraUpdateFactory.newLatLngZoom(poi.latLng, DEFAULT_ZOOM);
