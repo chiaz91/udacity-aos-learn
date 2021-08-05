@@ -1,4 +1,4 @@
-# Developing Android Apps with Kotlin - Part 2
+# Advanced Android Apps with Kotlin - Part 1
 
 ## 1. Using Notifications
 EggTimer: Notification, Push Notification (FireBase Cloud Message)

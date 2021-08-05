@@ -1,4 +1,4 @@
-# Developing Android Apps with Kotlin - Part 2
+# Advanced Android Apps with Kotlin - Part 2
 
 ## 1. Wandering in Google maps
 Wonder: add marker, longClick, poiClick, styling, overlay, my location + permission
