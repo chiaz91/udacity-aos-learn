@@ -19,6 +19,7 @@ package com.google.samples.propertyanimation
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -91,6 +92,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun scaler() {
+        // Scale the view up to 4x its default size and back
+        val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 4f)
+        val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 4f)
+        val animator = ObjectAnimator.ofPropertyValuesHolder(star, scaleX, scaleY)
+        animator.repeatCount = 1
+        animator.repeatMode = ObjectAnimator.REVERSE
+        animator.disableViewDuringAnimation(scaleButton)
+        animator.start()
     }
 
     private fun fader() {
