@@ -31,7 +31,7 @@
         tools:text="company: nike" />
 
     <TextView
-        android:id="@+id/desc"
+        android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"

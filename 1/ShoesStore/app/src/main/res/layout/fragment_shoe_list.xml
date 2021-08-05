@@ -17,8 +17,10 @@
             android:paddingEnd="16dp">
 
             <LinearLayout
+                android:id="@+id/shoes_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 tools:context=".fragments.ShoeListFragment">
 
             </LinearLayout>
