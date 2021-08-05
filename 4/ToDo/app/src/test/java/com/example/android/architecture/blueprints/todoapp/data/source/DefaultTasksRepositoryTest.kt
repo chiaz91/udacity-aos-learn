@@ -1,5 +1,6 @@
 package com.example.android.architecture.blueprints.todoapp.data.source
 
+import com.example.android.architecture.blueprints.todoapp.MainCoroutineRule
 import com.example.android.architecture.blueprints.todoapp.data.Result
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import kotlinx.coroutines.Dispatchers
@@ -8,9 +9,13 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsEqual
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 class DefaultTasksRepositoryTest{
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
+
     private val task1 = Task("Title1", "Description1")
     private val task2 = Task("Title2", "Description2")
     private val task3 = Task("Title3", "Description3")
@@ -33,7 +38,7 @@ class DefaultTasksRepositoryTest{
             // TODO Dispatchers.Unconfined should be replaced with Dispatchers.Main
             //  this requires understanding more about coroutines + testing
             //  so we will keep this as Unconfined for now.
-            tasksRemoteDataSource, tasksLocalDataSource, Dispatchers.Unconfined
+            tasksRemoteDataSource, tasksLocalDataSource, Dispatchers.Main
         )
     }
 
@@ -41,7 +46,7 @@ class DefaultTasksRepositoryTest{
     // ensure it runs in deterministic order and non-coroutine (just for testing)
     @ExperimentalCoroutinesApi
     @Test
-    fun getTasks_requestsAllTasksFromRemoteDataSource() = runBlockingTest{
+    fun getTasks_requestsAllTasksFromRemoteDataSource() = mainCoroutineRule.runBlockingTest{
         // When tasks are requested from the tasks repository
         val tasks = tasksRepository.getTasks(true) as Result.Success
 
