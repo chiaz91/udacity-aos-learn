@@ -31,7 +31,6 @@ class SaveReminderFragment : BasePermissionFragment() {
     //Get the view model this time as a single to be shared with the another fragment
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSaveReminderBinding
-    private val runningQOrLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
     private val geofencingClient by lazy {
         LocationServices.getGeofencingClient(requireContext())
     }
@@ -99,6 +98,7 @@ class SaveReminderFragment : BasePermissionFragment() {
             // check location on
             checkDeviceLocationSettingsAndAddGeofence(reminder)
         } else {
+            binding.saveReminder.tag = reminder
             requestForegroundBackgroundLocationPermissions()
         }
     }
@@ -108,12 +108,26 @@ class SaveReminderFragment : BasePermissionFragment() {
         super.onDestroy()
         //make sure to clear the view model after destroy, as it's a single view model.
         _viewModel.onClear()
+        binding.saveReminder.tag = null
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Log.i(TAG, "onActivityResult $requestCode, $resultCode, $data")
-        // handle location setting result if needed
+
+        when (requestCode){
+            REQ_TURN_DEVICE_LOCATION_ON -> {
+                Log.i(TAG, "Received device's location setting result!")
+                binding.saveReminder.tag?.let {
+                    if (it is ReminderDataItem){
+                        doAddGeofenceForReminder(it)
+                    }
+                }
+            }
+
+        }
+
+
     }
 
     // location permission related
@@ -121,22 +135,30 @@ class SaveReminderFragment : BasePermissionFragment() {
         Log.i(TAG, "onPermissionsGranted $requestCode")
         when (requestCode){
             REQ_PERMISSION_FOREGROUND_LOCATION, REQ_PERMISSION_FOREGROUND_BACKGROUND_LOCATION -> {
-                Log.i(TAG, "location permissions granted!")
-                // check device location?
-                checkDeviceLocationSettingsAndAddGeofence(null)
+                Log.i(TAG, "foreground/background location permissions granted!")
+                binding.saveReminder.tag?.let {
+                    if (it is ReminderDataItem){
+                        checkDeviceLocationSettingsAndAddGeofence(it)
+                    }
+                }
             }
         }
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
         Log.i(TAG, "onPermissionsDenied $requestCode")
-//        requireContext().showPermissionDeniedDialog(getString(R.string.permission_denied_explanation))
-//        val view = requireActivity().findViewById<View>(android.R.id.content)
+        when (requestCode){
+            REQ_PERMISSION_FOREGROUND_LOCATION, REQ_PERMISSION_FOREGROUND_BACKGROUND_LOCATION -> {
+                if (shouldShowRequestPermissionsRationale(perms)){
+//                    requireContext().showPermissionDeniedDialog(getString(R.string.permission_denied_explanation))
+                    Snackbar.make(requireView(), R.string.permission_denied_explanation, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.settings) {
+                            requireContext().toSettingPage()
+                        }.show()
+                }
+            }
 
-        Snackbar.make(requireView(), R.string.permission_denied_explanation, Snackbar.LENGTH_INDEFINITE)
-            .setAction(R.string.settings) {
-                requireContext().toSettingPage()
-            }.show()
+        }
     }
 
     /*

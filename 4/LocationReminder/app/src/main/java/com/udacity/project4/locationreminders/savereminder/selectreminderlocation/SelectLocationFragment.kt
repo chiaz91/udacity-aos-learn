@@ -256,18 +256,16 @@ class SelectLocationFragment : BasePermissionFragment(), OnMapReadyCallback {
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
         when (requestCode){
             REQ_PERMISSION_FOREGROUND_LOCATION -> {
-//                if (shouldShowRequestPermissionsRationale(perms)){
+                if (shouldShowRequestPermissionsRationale(perms)){
 //                    requireContext().showPermissionDeniedDialog(getString(R.string.permission_denied_explanation))
-//                }
-//                requireContext().showPermissionDeniedDialog(getString(R.string.permission_denied_explanation))
-                Snackbar.make(requireView(), R.string.permission_denied_explanation, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.settings) {
-                        requireContext().toSettingPage()
-                    }.show()
+                    Snackbar.make(requireView(), R.string.permission_denied_explanation, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.settings) {
+                            requireContext().toSettingPage()
+                        }.show()
+                }
             }
 
         }
-
     }
 
 

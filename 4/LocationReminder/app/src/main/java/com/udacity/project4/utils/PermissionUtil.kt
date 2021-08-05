@@ -74,7 +74,7 @@ fun Fragment.requestForegroundLocationPermissions(){
 
 @TargetApi(29)
 fun Fragment.requestForegroundBackgroundLocationPermissions(){
-    if (hasForegroundLocationPermission())
+    if (hasForegroundBackgroundLocationPermission())
         return
     var permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
     val resultCode = when {
