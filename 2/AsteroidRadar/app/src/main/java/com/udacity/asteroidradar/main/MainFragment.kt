@@ -5,15 +5,17 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.AsteroidAdapter
+import com.udacity.asteroidradar.AsteroidClickListener
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
-    private val adapter = AsteroidAdapter()
+    private lateinit var adapter: AsteroidAdapter
 
     private val viewModel: MainViewModel by lazy {
         val viewModelFactory = MainViewModelFactory(requireActivity().application)
@@ -25,6 +27,10 @@ class MainFragment : Fragment() {
         binding = FragmentMainBinding.inflate(inflater)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        adapter = AsteroidAdapter(AsteroidClickListener { asteroid ->
+            findNavController().navigate(MainFragmentDirections.actionShowDetail(asteroid))
+        })
         binding.asteroidRecycler.adapter = adapter
 
         setHasOptionsMenu(true)
