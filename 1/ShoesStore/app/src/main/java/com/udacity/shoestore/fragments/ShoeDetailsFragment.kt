@@ -1,7 +1,9 @@
 package com.udacity.shoestore.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -21,32 +23,31 @@ class ShoeDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_shoe_details, container, false)
-        binding.buttonSave.setOnClickListener{
-            saveShoe()
-        }
-        binding.buttonCancel.setOnClickListener{
-            cancelShoe()
-        }
-
         // retrieving view mode
         viewModel = ViewModelProvider(requireActivity()).get(ShoeViewModel::class.java)
 
+        // Inflate the layout for this fragment
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_shoe_details, container, false)
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            newShoe = Shoe("",0.0, "","")
+            buttonSave.setOnClickListener{
+                saveShoe()
+            }
+            buttonCancel.setOnClickListener{
+                cancelShoe()
+            }
+        }
         return binding.root
     }
 
 
     private fun saveShoe(){
         try{
-            // save shoe
-            val name = binding.shoeName.text.toString()
-            val size = binding.shoeSize.text.toString().toDouble()
-            val company = binding.company.text.toString()
-            val description = binding.description.text.toString()
-            viewModel.addShoe( Shoe(name, size,company, description))
-
-            // navigate back
+            // add shoes to list
+            viewModel.addShoe(binding.newShoe!!)
+            
+            // navigate back to list shoes
             findNavController().navigate(ShoeDetailsFragmentDirections.actionShoeDetailsFragmentToShoeListFragment())
         } catch (e: Exception){
             Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()

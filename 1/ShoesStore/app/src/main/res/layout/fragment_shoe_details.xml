@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="newShoe"
+            type="com.udacity.shoestore.models.Shoe" />
     </data>
 
     <!-- wanted to arrange views in vertical orientation, so uses LinearLayout -->
@@ -25,6 +27,7 @@
             android:id="@+id/shoe_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@={newShoe.name}"
             android:hint="@string/enter_shoe_name" />
 
         <TextView
@@ -37,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
+            android:text="@={``+newShoe.size}"
             android:hint="@string/enter_shoe_size" />
 
         <TextView
@@ -48,6 +52,7 @@
             android:id="@+id/company"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@={newShoe.company}"
             android:hint="@string/enter_company_name" />
 
         <TextView
@@ -59,6 +64,7 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@={newShoe.description}"
             android:hint="@string/enter_description" />
 
         <Button
