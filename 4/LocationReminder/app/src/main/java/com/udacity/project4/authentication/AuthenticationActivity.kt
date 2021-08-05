@@ -52,7 +52,7 @@ class AuthenticationActivity : AppCompatActivity() {
         val intentSignIn = AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
-            .setLogo(R.drawable.ic_launcher_foreground) // Set logo drawable
+            .setLogo(R.drawable.map) // Set logo drawable
             .setTheme(R.style.LoginTheme) // Set theme
             .build()
         startActivityForResult(intentSignIn, SIGN_IN_RESULT_CODE)

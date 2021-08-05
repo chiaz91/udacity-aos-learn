@@ -8,14 +8,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md#custom-layout -->
-    <style name="LoginTheme" parent="AppTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
 
-        <item name="colorPrimary">@color/green_cyan_light</item>
-        <item name="colorPrimaryDark">@color/green_cyan_light</item>
-        <item name="android:windowBackground">@color/green_cyan_light</item>
+    <!-- FirebaseUI Styling
+        - Logo: FirebaseUI.AuthMethodPicker.Logo
+        - Text: FirebaseUI.Text
+        - Text.Link: FirebaseUI.Text.Link
+        - EditText: TextInputEditText
+        - ref: https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md#custom-layout
+    -->
+    <style name="LoginTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@android:color/white</item>
+        <!--  <item name="android:windowBackground">@color/gray_dark</item> -->
     </style>
 
 
